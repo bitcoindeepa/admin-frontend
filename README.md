@@ -20,6 +20,10 @@ The backend's admin sign-in is also the OAuth server of its read-only DB MCP (`P
 
 `/audit-log` reads the backend's audit trail (`GET /admin/audit-log`): every dashboard request, sign-in (failed ones too), sign-out, MCP client consent and DB MCP query, with the admin, IP and result. Filters live in the URL like the other lists; **Details** shows everything an entry recorded.
 
+## Deploying (Vercel)
+
+It's a single-page app: `vercel.json` rewrites every path to `index.html`, so a direct link or a refresh on `/members`, `/login` or `/oauth/consent` loads the app instead of Vercel's 404 (files that exist, like `/assets/*`, are still served as they are). `VITE_API_URL` is read at build time: after changing it in Vercel, redeploy.
+
 ## Structure
 
 ```
