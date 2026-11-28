@@ -1,7 +1,13 @@
 import { createBrowserRouter, Navigate } from "react-router"
 
 import { AdminsPage } from "@/features/admins"
-import { LoginPage, redirectIfSignedIn, requireAdmin } from "@/features/auth"
+import { AuditLogPage } from "@/features/audit-log"
+import {
+  ConsentPage,
+  LoginPage,
+  redirectIfSignedIn,
+  requireAdmin,
+} from "@/features/auth"
 import { BankReviewsPage } from "@/features/bank-reviews"
 import { DashboardPage } from "@/features/dashboard"
 import { MembersPage } from "@/features/members"
@@ -18,6 +24,8 @@ export const router = createBrowserRouter([
     HydrateFallback: LoadingScreen,
     children: [
       { path: "/login", loader: redirectIfSignedIn, Component: LoginPage },
+      // The backend's OAuth server (DB MCP) asks a signed-in admin to approve a client here
+      { path: "/oauth/consent", loader: requireAdmin, Component: ConsentPage },
       {
         path: "/",
         loader: requireAdmin,
@@ -48,6 +56,11 @@ export const router = createBrowserRouter([
             path: "admins",
             Component: AdminsPage,
             handle: { title: "Admins" },
+          },
+          {
+            path: "audit-log",
+            Component: AuditLogPage,
+            handle: { title: "Audit Log" },
           },
           { path: "*", Component: NotFoundPage },
         ],

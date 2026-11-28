@@ -3,6 +3,7 @@ import {
   LandmarkIcon,
   LayoutDashboardIcon,
   ReceiptTextIcon,
+  ScrollTextIcon,
   ShieldUserIcon,
   UsersIcon,
 } from "lucide-react"
@@ -27,6 +28,7 @@ const navItems: NavItem[] = [
   { title: "Transactions", url: "/transactions", icon: <ReceiptTextIcon /> },
   { title: "Bank Reviews", url: "/bank-reviews", icon: <LandmarkIcon /> },
   { title: "Admins", url: "/admins", icon: <ShieldUserIcon /> },
+  { title: "Audit Log", url: "/audit-log", icon: <ScrollTextIcon /> },
 ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
