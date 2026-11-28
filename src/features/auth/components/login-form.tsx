@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
+import { hasOAuthRequest } from "../api/auth-client"
 import { safeRedirect } from "../api/route-guards"
 import { useSignIn } from "../hooks/use-sign-in"
 
@@ -24,6 +25,9 @@ export function LoginForm({
   const navigate = useNavigate()
   const [redirectTo] = useQueryState("redirect", parseAsString)
   const signIn = useSignIn()
+  // Sent here by the backend's OAuth server (connecting Claude to the DB MCP)
+  const oauth = hasOAuthRequest()
+  const leaving = signIn.isSuccess && signIn.data.leaving
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -34,7 +38,9 @@ export function LoginForm({
         password: String(form.get("password")),
       },
       {
-        onSuccess: () => navigate(safeRedirect(redirectTo), { replace: true }),
+        onSuccess: ({ leaving }) => {
+          if (!leaving) navigate(safeRedirect(redirectTo), { replace: true })
+        },
       }
     )
   }
@@ -46,7 +52,11 @@ export function LoginForm({
           <div className="flex flex-col items-center gap-2 text-center">
             <Logo className="h-20 w-auto" />
             <h1 className="text-xl font-bold">BitcoinDeepa Admin</h1>
-            <FieldDescription>Sign in with your admin account</FieldDescription>
+            <FieldDescription>
+              {oauth
+                ? "Sign in with your admin account to connect an MCP client"
+                : "Sign in with your admin account"}
+            </FieldDescription>
           </div>
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -71,8 +81,12 @@ export function LoginForm({
           </Field>
           {signIn.error && <FieldError>{signIn.error.message}</FieldError>}
           <Field>
-            <Button type="submit" disabled={signIn.isPending}>
-              {signIn.isPending ? "Signing in..." : "Sign in"}
+            <Button type="submit" disabled={signIn.isPending || leaving}>
+              {leaving
+                ? "Continuing..."
+                : signIn.isPending
+                  ? "Signing in..."
+                  : "Sign in"}
             </Button>
           </Field>
         </FieldGroup>

@@ -12,6 +12,10 @@ bun run dev
 
 Sign-in uses the backend's Better Auth (`/api/admin-auth`). Only admins can sign in; create the first one on the backend with `bun run admin:create --email <email> --name "<name>"`, then add others from the **Admins** page.
 
+## Connecting Claude (DB MCP)
+
+The backend's admin sign-in is also the OAuth server of its read-only DB MCP (`POST /mcp`, backend `docs/mcp.md`). When an admin connects Claude, the backend sends them to `/login` (the sign-in continues the OAuth request: `oauthProviderClient()` in `auth-client.ts` sends the page's signed query along) and then to `/oauth/consent` to allow the client once. Both pages only act on a request the backend signed.
+
 ## Structure
 
 ```

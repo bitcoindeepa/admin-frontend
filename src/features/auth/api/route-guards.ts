@@ -2,6 +2,7 @@ import { redirect, type LoaderFunctionArgs } from "react-router"
 
 import { queryClient } from "@/lib/query-client"
 
+import { hasOAuthRequest } from "./auth-client"
 import { isAdmin, sessionQueryOptions } from "./session"
 
 /**
@@ -44,8 +45,13 @@ export async function requireAdmin({ request }: LoaderFunctionArgs) {
   return null
 }
 
-/** Loader for /login: already signed-in admins go straight to the app. */
+/**
+ * Loader for /login: already signed-in admins go straight to the app - unless
+ * the backend's OAuth server sent them here to sign in again (prompt=login):
+ * then the sign-in itself continues that request.
+ */
 export async function redirectIfSignedIn({ request }: LoaderFunctionArgs) {
+  if (hasOAuthRequest(new URL(request.url).search)) return null
   const session = await loadSession()
   if (isAdmin(session)) {
     throw redirect(
