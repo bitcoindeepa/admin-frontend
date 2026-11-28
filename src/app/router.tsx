@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router"
 
 import { AdminsPage } from "@/features/admins"
+import { AuditLogPage } from "@/features/audit-log"
 import {
   ConsentPage,
   LoginPage,
@@ -55,6 +56,11 @@ export const router = createBrowserRouter([
             path: "admins",
             Component: AdminsPage,
             handle: { title: "Admins" },
+          },
+          {
+            path: "audit-log",
+            Component: AuditLogPage,
+            handle: { title: "Audit Log" },
           },
           { path: "*", Component: NotFoundPage },
         ],

@@ -16,6 +16,10 @@ Sign-in uses the backend's Better Auth (`/api/admin-auth`). Only admins can sign
 
 The backend's admin sign-in is also the OAuth server of its read-only DB MCP (`POST /mcp`, backend `docs/mcp.md`). When an admin connects Claude, the backend sends them to `/login` (the sign-in continues the OAuth request: `oauthProviderClient()` in `auth-client.ts` sends the page's signed query along) and then to `/oauth/consent` to allow the client once. Both pages only act on a request the backend signed.
 
+## Audit Log
+
+`/audit-log` reads the backend's audit trail (`GET /admin/audit-log`): every dashboard request, sign-in (failed ones too), sign-out, MCP client consent and DB MCP query, with the admin, IP and result. Filters live in the URL like the other lists; **Details** shows everything an entry recorded.
+
 ## Structure
 
 ```
